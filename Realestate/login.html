@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Glassmorphism Login/Register</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* Replace your <style> tag contents with this */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+  color: #333;
+}
+
+.glass-form {
+  width: 90%;
+  max-width: 400px;
+  background: rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(8px);
+  border-radius: 20px;
+  padding: 30px;
+  color: #333;
+  box-shadow: 0 0 30px rgba(0,0,0,0.1);
+  overflow: hidden;
+  margin: 20px;
+}
+
+.form-container {
+  display: none;
+  opacity: 0;
+  transform: translateX(20px);
+  transition: all 0.4s ease;
+}
+
+.form-container.active {
+  display: block;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+h3 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 40px 12px 40px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.1);
+  background: rgba(255,255,255,0.8);
+  color: #333;
+  font-size: 16px;
+}
+
+.form-group input::placeholder {
+  color: rgba(0,0,0,0.5);
+}
+
+.form-group i {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+}
+
+.icon-left {
+  left: 12px;
+}
+
+.toggle-password {
+  right: 12px;
+  cursor: pointer;
+}
+
+button[type="submit"] {
+  width: 100%;
+  padding: 12px;
+  background: #4f46e5;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background: #372fd0;
+}
+
+.form-switch {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.form-switch a {
+  color: #4f46e5;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 3px solid #fff;
+  border-top: 3px solid transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  vertical-align: middle;
+  margin-left: 10px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 500px) {
+  h3 {
+    font-size: 20px;
+  }
+
+  .form-group input {
+    font-size: 14px;
+    padding: 10px 38px 10px 38px;
+  }
+
+  button[type="submit"] {
+    font-size: 15px;
+  }
+}
+
+  </style>
+</head>
+<body>
+
+  <div class="glass-form">
+    <!-- Login Form -->
+    <div class="form-container login active">
+      <h3>Admin Login</h3>
+      <form id="login-form">
+        <div class="form-group">
+          <i class="fas fa-envelope icon-left"></i>
+          <input type="email" name="email" placeholder="Email" required>
+        </div>
+        <div class="form-group">
+          <i class="fas fa-lock icon-left"></i>
+          <input type="password" name="password" placeholder="Password" required id="login-password">
+          <i class="fas fa-eye toggle-password" onclick="togglePassword('login-password', this)"></i>
+        </div>
+        <button type="submit" id="login-btn">Login</button>
+      </form>
+      <!-- <p class="form-switch">Don't have an account? <a onclick="switchForm('register')">Register</a></p> -->
+    </div>
+
+    <!-- Register Form -->
+    <div class="form-container register">
+      <h3>Register</h3>
+      <form id="register-form">
+        <div class="form-group">
+          <i class="fas fa-user icon-left"></i>
+          <input type="text" name="username" placeholder="Username" required>
+        </div>
+        <div class="form-group">
+          <i class="fas fa-envelope icon-left"></i>
+          <input type="email" name="email" placeholder="Email" required>
+        </div>
+        <div class="form-group">
+          <i class="fas fa-lock icon-left"></i>
+          <input type="password" name="password" placeholder="Password" required id="reg-password">
+          <i class="fas fa-eye toggle-password" onclick="togglePassword('reg-password', this)"></i>
+        </div>
+        <div class="form-group">
+          <i class="fas fa-lock icon-left"></i>
+          <input type="password" name="confirm" placeholder="Confirm Password" required id="reg-confirm">
+          <i class="fas fa-eye toggle-password" onclick="togglePassword('reg-confirm', this)"></i>
+        </div>
+        <button type="submit" id="register-btn">Register</button>
+      </form>
+      <p class="form-switch">Already have an account? <a onclick="switchForm('login')">Login</a></p>
+    </div>
+  </div>
+
+  <script>
+    function switchForm(form) {
+      const login = document.querySelector('.form-container.login');
+      const register = document.querySelector('.form-container.register');
+      login.classList.remove('active');
+      register.classList.remove('active');
+      setTimeout(() => {
+        if (form === 'login') login.classList.add('active');
+        else register.classList.add('active');
+      }, 100);
+    }
+
+    function togglePassword(id, el) {
+      const input = document.getElementById(id);
+      const type = input.type === 'password' ? 'text' : 'password';
+      input.type = type;
+      el.classList.toggle('fa-eye');
+      el.classList.toggle('fa-eye-slash');
+    }
+
+    // LOGIN - Send data to login.php and redirect on success
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const btn = document.getElementById('login-btn');
+      btn.innerHTML = 'Logging in <span class="spinner"></span>';
+
+      const formData = new FormData(this);
+
+      fetch('login.php', {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.text())
+      .then(data => {
+        btn.innerHTML = 'Login';
+        if (data.trim() === 'success') {
+          window.location.href = 'index.php'; // ✅ redirect to protected page
+        } else {
+          alert(data.trim()); // show error
+        }
+      })
+      .catch(err => {
+        btn.innerHTML = 'Login';
+        alert('Login failed. Please try again.');
+      });
+    });
+
+    // REGISTER - Send data to register.php
+    document.getElementById('register-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const pass = document.getElementById('reg-password').value;
+      const confirm = document.getElementById('reg-confirm').value;
+      if (pass !== confirm) {
+        alert("Passwords don't match");
+        return;
+      }
+
+      const btn = document.getElementById('register-btn');
+      btn.innerHTML = 'Registering <span class="spinner"></span>';
+
+      const formData = new FormData(this);
+
+      fetch('register.php', {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.text())
+      .then(data => {
+        btn.innerHTML = 'Register';
+        if (data.trim() === 'success') {
+          alert('Registration successful! Please log in.');
+          switchForm('login');  
+        } else {
+          alert(data.trim());
+        }
+      })
+      .catch(err => {
+        btn.innerHTML = 'Register';
+        alert('Registration failed. Please try again.');
+      });
+    });
+  </script>
+</body>
+</html>
